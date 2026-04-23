@@ -26,7 +26,7 @@ export const buscarPokemonsIniciais = async (page: number = 1, search: string = 
     } 
     // SE NÃO TIVER FILTRO: Busca os 151 iniciais normalmente
     else {
-        const respostaLista = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=151`);
+        const respostaLista = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1000`);
         if (!respostaLista.ok) throw new Error('Falha ao buscar a PokeAPI');
         const dadosLista = await respostaLista.json();
         lista = dadosLista.results;
