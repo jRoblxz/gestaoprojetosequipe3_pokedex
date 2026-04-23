@@ -8,7 +8,8 @@ const PORTA = 8000;
 // 1. Ativa o CORS para permitir que o Frontend acesse do localhost e a produção
 app.use(cors({
   origin: [
-    'https://pokedex-fatecpp.vercel.app/', // URL do frontend hospedado no Vercel
+    'https://pokedex-fatecpp.vercel.app/',
+    'gestaoprojetosequipe3-testes-ircs3c5ze-joaos-projects-e09f90c2.vercel.app', // URL do frontend hospedado no Vercel
     'http://localhost:5173' // Para continuar conseguindo testar local
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
