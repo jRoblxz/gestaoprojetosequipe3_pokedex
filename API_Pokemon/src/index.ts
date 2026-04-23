@@ -6,7 +6,14 @@ const app = express();
 const PORTA = 8000;
 
 // 1. Ativa o CORS para permitir que o Frontend acesse do localhost 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://gestaoprojetosequipe3-testes.vercel.app', // Sua URL do print
+    'http://localhost:5173' // Para você continuar conseguindo testar local
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
 // 2. Permite que o servidor entenda JSON (útil para a Sprint 2)
 app.use(express.json());
