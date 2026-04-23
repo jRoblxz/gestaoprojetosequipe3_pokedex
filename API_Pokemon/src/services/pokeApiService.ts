@@ -21,7 +21,7 @@ export const buscarPokemonsIniciais = async (page: number = 1, search: string = 
             .filter((p: any) => {
                 const urlParts = p.url.split('/');
                 const id = parseInt(urlParts[urlParts.length - 2]);
-                return id <= 151;
+                return id <= 1000;
             });
     } 
     // SE NÃO TIVER FILTRO: Busca os 151 iniciais normalmente
