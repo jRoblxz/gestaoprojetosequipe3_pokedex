@@ -3,13 +3,14 @@ import { buscarPokemonsIniciais } from '../services/pokeApiService';
 
 export const getPokemons = async (req: Request, res: Response): Promise<void> => {
     try {
+        // Extrai os parâmetros de consulta (query params)
         const page = parseInt(req.query.page as string) || 1;
         const search = (req.query.search as string) || '';
-        const type = (req.query.type as string) || ''; // <- Captura o tipo aqui
-        
-        // Passa o tipo para o Service
+        const type = (req.query.type as string) || ''; 
+        // Chama a função de serviço para buscar os pokemons com os filtros e paginação
         const resultado = await buscarPokemonsIniciais(page, search, type);
 
+        // Retorna a resposta com os dados e informações de paginação
         res.status(200).json({
             success: true,
             data: resultado.dados,
@@ -17,6 +18,7 @@ export const getPokemons = async (req: Request, res: Response): Promise<void> =>
             last_page: resultado.lastPage
         });
         
+    // Tratamento de erros
     } catch (erro) {
         console.error("Erro no PokemonController:", erro);
         res.status(500).json({ success: false, data: [], erro: 'Erro interno' });

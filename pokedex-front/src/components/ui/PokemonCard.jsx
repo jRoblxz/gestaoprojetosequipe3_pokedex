@@ -92,6 +92,24 @@ const typeThemes = {
     b2: "from-pink-400 to-fuchsia-300",
     text: "text-pink-300",
   },
+  dark: {
+    main: "from-gray-800 to-neutral-900",
+    b1: "from-neutral-700 to-gray-600",
+    b2: "from-black to-neutral-800",
+    text: "text-neutral-400",
+  },
+  fighting: {
+    main: "from-orange-700 to-red-800",
+    b1: "from-red-600 to-orange-500",
+    b2: "from-orange-900 to-red-900",
+    text: "text-orange-600",
+  },
+  steel: {
+    main: "from-blue-900/40 to-slate-500",
+    b1: "from-slate-400 to-gray-300",
+    b2: "from-slate-600 to-blue-800",
+    text: "text-slate-400",
+  },
 };
 
 // Removemos a tipagem daqui!

@@ -5,11 +5,11 @@ import rotasApi from './routes/api';
 const app = express();
 const PORTA = 8000;
 
-// 1. Ativa o CORS para permitir que o Frontend acesse do localhost 
+// 1. Ativa o CORS para permitir que o Frontend acesse do localhost e a produção
 app.use(cors({
   origin: [
-    'https://gestaoprojetosequipe3-testes.vercel.app', // Sua URL do print
-    'http://localhost:5173' // Para você continuar conseguindo testar local
+    'https://pokedex-fatecpp.vercel.app/', // URL do frontend hospedado no Vercel
+    'http://localhost:5173' // Para continuar conseguindo testar local
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
@@ -23,6 +23,6 @@ app.use('/api', rotasApi);
 
 // 4. Liga o motor!
 app.listen(PORTA, () => {
-    console.log(`🚀 Servidor rodando em http://localhost:${PORTA}`);
-    console.log(`👉 Teste a rota em http://localhost:${PORTA}/api/pokemon`);
+    console.log(`Servidor rodando em http://localhost:${PORTA}`);
+    console.log(` Teste a rota em http://localhost:${PORTA}/api/pokemon`);
 });

@@ -15,7 +15,7 @@ export const buscarPokemonsIniciais = async (page: number = 1, search: string = 
         if (!resType.ok) throw new Error('Tipo não encontrado na PokeAPI');
         
         const data = await resType.json();
-        // Extrai os pokemons e filtra apenas os da Geração 1 (ID <= 151)
+        // Extrai os pokemons e filtra-os )
         lista = data.pokemon
             .map((p: any) => p.pokemon)
             .filter((p: any) => {
@@ -24,7 +24,7 @@ export const buscarPokemonsIniciais = async (page: number = 1, search: string = 
                 return id <= 1000;
             });
     } 
-    // SE NÃO TIVER FILTRO: Busca os 151 iniciais normalmente
+    // SE NÃO TIVER FILTRO: Busca tds
     else {
         const respostaLista = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1000`);
         if (!respostaLista.ok) throw new Error('Falha ao buscar a PokeAPI');
