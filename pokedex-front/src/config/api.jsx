@@ -1,11 +1,11 @@
-// 1. Exportamos a URL base (sem a barra extra no final do pokemon!)
-//export const BASE_URL = "http://localhost:8000/api/";
-export const BASE_URL = "https://pokedex-gestaoeq3-auhccpbccxb0h2bp.brazilsouth-01.azurewebsites.net/api/";
+// 1. Atualizamos para a URL oficial do Render
+// Removemos o link antigo do Azure que estava dando erro de permissão
+export const BASE_URL = "https://gestaoprojetosequipe3-testes.onrender.com/api/";
 
-// 2. Exportamos o objeto 'api' que o seu App.jsx está procurando
+// 2. Mantemos o objeto 'api' que o seu App.jsx já utiliza
 export const api = {
   get: async (endpoint) => {
-    // Faz o fetch juntando a BASE_URL com a rota (ex: pokemon)
+    // O fetch agora baterá no novo serviço configurado no Render
     const resposta = await fetch(`${BASE_URL}${endpoint}`, {
       method: "GET",
       headers: {
@@ -20,7 +20,7 @@ export const api = {
 
     const json = await resposta.json();
     
-    // Retornamos { data: json } para o App.jsx conseguir ler certinho
+    // Retornamos o formato { data: json } compatível com seu App.jsx
     return { data: json };
   }
 };
