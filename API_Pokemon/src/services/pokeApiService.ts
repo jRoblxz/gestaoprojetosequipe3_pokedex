@@ -5,8 +5,8 @@ export interface PokemonContract {
     image_url: string;
 }
 
-export const buscarPokemonsIniciais = async (page: number = 1, search: string = '', type: string = '') => {
-    const limitPorPagina = 18;
+export const buscarPokemonsIniciais = async (page: number = 1, search: string = '', type: string = '', limit: number = 18) => {
+    const limitPorPagina = limit;
     let lista = [];
 
     // SE TIVER FILTRO DE TIPO: Busca na rota de Tipos da PokeAPI
