@@ -46,13 +46,25 @@ function App() {
   const [buscaDebounce, setBuscaDebounce] = useState("");
   const [tipoSelecionado, setTipoSelecionado] = useState("all");
 
+  const [tipo1, setTipo1] = useState("all");
+  const [tipo2, setTipo2] = useState("all");
+
+  // 1º CORREÇÃO: O timer da busca voltou!
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBuscaDebounce(busca);
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [busca]);
+
+  // 2º CORREÇÃO: useEffect da API
   useEffect(() => {
     setCarregando(true);
 
     api
       .get(
-        // Adicionamos o &limit=${limit} na URL
-        `pokemon?page=${page}&search=${buscaDebounce}&type=${tipoSelecionado}&limit=${limit}`,
+        `pokemon?page=${page}&search=${buscaDebounce}&type1=${tipo1}&type2=${tipo2}&limit=${limit}`
       )
       .then((resposta) => {
         if (resposta.data.success) {
@@ -61,17 +73,16 @@ function App() {
             current_page: resposta.data.current_page || page,
             last_page: resposta.data.last_page || 1,
           });
-          // Se o backend retornar o total de páginas diretamente no data, atualize o lastPage:
           if (resposta.data.last_page) {
-             setLastPage(resposta.data.last_page);
+            setLastPage(resposta.data.last_page);
           }
         }
       })
       .catch((erro) => console.error("Erro ao buscar a API:", erro))
       .finally(() => setCarregando(false));
-      
-  // Adicionamos o 'limit' no array de dependências para a tela recarregar quando ele mudar
-  }, [page, buscaDebounce, tipoSelecionado, limit]);
+
+    // 3º CORREÇÃO AQUI NO FINAL: Adicionado tipo1 e tipo2, e removido tipoSelecionado
+  }, [page, buscaDebounce, tipo1, tipo2, limit]);
 
   const handleTrocarTipo = (idTipo) => {
     setTipoSelecionado(idTipo);
@@ -79,20 +90,20 @@ function App() {
   };
 
   const handlePageInput = (e) => {
-  const valor = e.target.value;
-  setInputPage(valor); // Atualiza o que o usuário está digitando na tela
-};
+    const valor = e.target.value;
+    setInputPage(valor); // Atualiza o que o usuário está digitando na tela
+  };
 
-const irParaPaginaDigitada = () => {
-  let novaPagina = parseInt(inputPage);
-  
-  // Validações de segurança para não ir para a página 0 ou página infinita
-  if (isNaN(novaPagina) || novaPagina < 1) novaPagina = 1;
-  if (novaPagina > lastPage) novaPagina = lastPage;
+  const irParaPaginaDigitada = () => {
+    let novaPagina = parseInt(inputPage);
 
-  setPage(novaPagina);
-  setInputPage(novaPagina.toString()); // Corrige o valor visualmente se ele digitou errado
-};
+    // Validações de segurança para não ir para a página 0 ou página infinita
+    if (isNaN(novaPagina) || novaPagina < 1) novaPagina = 1;
+    if (novaPagina > lastPage) novaPagina = lastPage;
+
+    setPage(novaPagina);
+    setInputPage(novaPagina.toString()); // Corrige o valor visualmente se ele digitou errado
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 relative overflow-hidden font-sans selection:bg-red-500 selection:text-white pb-20">
@@ -112,8 +123,14 @@ const irParaPaginaDigitada = () => {
         <FilterBar
           busca={busca}
           setBusca={setBusca}
-          tipoSelecionado={tipoSelecionado}
-          onTrocarTipo={handleTrocarTipo}
+          tipo1={tipo1}
+          setTipo1={setTipo1}
+          tipo2={tipo2}
+          setTipo2={setTipo2}
+          resetPagination={() => {
+            setPage(1);
+            setInputPage("1");
+          }}
         />
 
         {carregando ? (
@@ -148,43 +165,66 @@ const irParaPaginaDigitada = () => {
               ))}
             </main>
 
-            <div className="flex flex-col items-center gap-4 my-8">
+            {/* CONTAINER DA PAGINAÇÃO */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 my-16 bg-slate-800/40 p-4 rounded-3xl border border-slate-700/50 backdrop-blur-md w-fit mx-auto shadow-2xl">
               {/* SELETOR DE QUANTIDADE */}
-              <div className="flex items-center gap-2 text-white">
-                <label
-                  htmlFor="limitSelect"
-                  className="font-semibold text-slate-300"
-                >
-                  Mostrar por página:
-                </label>
-                <select
-                  id="limitSelect"
-                  className="bg-slate-700 text-white p-2 rounded outline-none border border-slate-500"
-                  value={limit}
-                  onChange={(e) => {
-                    setLimit(Number(e.target.value));
-                    setPage(1); // Sempre que mudar a quantidade, volta pra página 1
-                    setInputPage("1");
-                  }}
-                >
-                  <option value={18}>18</option>
-                  <option value={36}>36</option>
-                  <option value={100}>100</option>
-                </select>
+              <div className="flex items-center gap-3">
+                <span className="text-slate-400 font-medium text-sm hidden sm:block">
+                  Mostrar:
+                </span>
+                <div className="relative">
+                  <select
+                    id="limitSelect"
+                    className="appearance-none bg-slate-900 text-white font-bold py-2 pl-4 pr-10 rounded-xl outline-none border border-slate-600 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all cursor-pointer shadow-inner"
+                    value={limit}
+                    onChange={(e) => {
+                      setLimit(Number(e.target.value));
+                      setPage(1);
+                      setInputPage("1");
+                    }}
+                  >
+                    <option value={18}>18 por página</option>
+                    <option value={36}>36 por página</option>
+                    <option value={100}>100 por página</option>
+                  </select>
+                  {/* Ícone de Seta customizado do select */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
 
-              {/* CONTROLES DE PAGINAÇÃO */}
-              <div className="flex items-center gap-4">
-                {/* Botão Primeira Página */}
+              {/* DIVISOR (Some em telas pequenas) */}
+              <div className="hidden md:block w-px h-8 bg-slate-700"></div>
+
+              {/* CONTROLES DE PÁGINA */}
+              <div className="flex items-center gap-2">
+                {/* Primeira Página (Ícone duplo) */}
                 <button
                   onClick={() => {
                     setPage(1);
                     setInputPage("1");
                   }}
                   disabled={page === 1}
-                  className={`px-4 py-2 font-bold rounded ${page === 1 ? "bg-slate-600 text-slate-400 cursor-not-allowed" : "bg-slate-700 text-white hover:bg-slate-500 transition"}`}
+                  className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                  title="Primeira Página"
                 >
-                  &lt;&lt; Início
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+                    />
+                  </svg>
                 </button>
 
                 {/* Voltar (Seu AnimatedButton) */}
@@ -197,19 +237,20 @@ const irParaPaginaDigitada = () => {
                   disabled={page === 1}
                 />
 
-                {/* Input de Digitar a Página */}
-                <div className="flex items-center gap-2">
+                {/* Input Central e Contador */}
+                <div className="flex items-center gap-1 bg-slate-900 rounded-xl p-1 border border-slate-700 overflow-hidden shadow-inner mx-1">
                   <input
                     type="number"
                     value={inputPage}
                     onChange={handlePageInput}
-                    onBlur={irParaPaginaDigitada} // Executa quando clica fora do input
+                    onBlur={irParaPaginaDigitada}
                     onKeyDown={(e) =>
                       e.key === "Enter" && irParaPaginaDigitada()
-                    } // Executa ao dar Enter
-                    className="w-16 text-center p-2 rounded bg-slate-700 text-white border border-slate-500 outline-none focus:border-cyan-400"
+                    }
+                    className="w-14 text-center py-1 bg-transparent text-white font-bold outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:text-red-400 transition-colors"
+                    title="Digite a página e dê Enter"
                   />
-                  <span className="text-slate-300 font-semibold">
+                  <span className="text-slate-500 font-medium select-none pr-4">
                     de {lastPage}
                   </span>
                 </div>
@@ -224,16 +265,30 @@ const irParaPaginaDigitada = () => {
                   disabled={page === lastPage}
                 />
 
-                {/* Botão Última Página */}
+                {/* Última Página (Ícone duplo) */}
                 <button
                   onClick={() => {
                     setPage(lastPage);
                     setInputPage(lastPage.toString());
                   }}
                   disabled={page === lastPage}
-                  className={`px-4 py-2 font-bold rounded ${page === lastPage ? "bg-slate-600 text-slate-400 cursor-not-allowed" : "bg-slate-700 text-white hover:bg-slate-500 transition"}`}
+                  className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                  title="Última Página"
                 >
-                  Fim &gt;&gt;
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>

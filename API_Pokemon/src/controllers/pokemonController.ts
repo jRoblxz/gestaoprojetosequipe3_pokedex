@@ -1,26 +1,28 @@
 import { Request, Response } from 'express';
-import { buscarPokemonsIniciais } from '../services/pokeApiService';
+// Ajuste o caminho de importação do seu service conforme a sua pasta
+import { buscarPokemonsIniciais } from '../services/pokeApiService'; 
 
-export const getPokemons = async (req: Request, res: Response): Promise<void> => {
+export const getPokemons = async (req: Request, res: Response) => {
     try {
-        // Extrai os parâmetros de consulta (query params)
         const page = parseInt(req.query.page as string) || 1;
-        const search = (req.query.search as string) || '';
-        const type = (req.query.type as string) || ''; 
-        // Chama a função de serviço para buscar os pokemons com os filtros e paginação
-        const resultado = await buscarPokemonsIniciais(page, search, type);
+        const search = req.query.search as string || '';
+        const type1 = req.query.type1 as string || 'all'; // Recebe type1
+        const type2 = req.query.type2 as string || 'all'; // Recebe type2
+        const limit = parseInt(req.query.limit as string) || 18;
 
-        // Retorna a resposta com os dados e informações de paginação
-        res.status(200).json({
+        // 2. Enviamos todos os 4 parâmetros para o Service
+        const resultado = await buscarPokemonsIniciais(page, search, type1, type2, limit);
+        
+        // 3. Retornamos o JSON formatado para o Front-end
+        res.json({
             success: true,
             data: resultado.dados,
             current_page: page,
-            last_page: resultado.lastPage
+            last_page: resultado.lastPage 
         });
-        
-    // Tratamento de erros
-    } catch (erro) {
-        console.error("Erro no PokemonController:", erro);
-        res.status(500).json({ success: false, data: [], erro: 'Erro interno' });
+
+    } catch (error) {
+        console.error("Erro no Controller:", error);
+        res.status(500).json({ success: false, error: 'Erro ao buscar pokemons' });
     }
 };
