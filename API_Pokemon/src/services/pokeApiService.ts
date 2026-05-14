@@ -9,7 +9,6 @@ export const buscarPokemonsIniciais = async (page: number = 1, search: string = 
     const limitPorPagina = 18;
     let lista = [];
 
-    // SE TIVER FILTRO DE TIPO: Busca na rota de Tipos da PokeAPI
     if (type && type !== 'all') {
         const resType = await fetch(`https://pokeapi.co/api/v2/type/${type.toLowerCase()}`);
         if (!resType.ok) throw new Error('Tipo não encontrado na PokeAPI');
@@ -24,7 +23,6 @@ export const buscarPokemonsIniciais = async (page: number = 1, search: string = 
                 return id <= 151;
             });
     } 
-    // SE NÃO TIVER FILTRO: Busca os 151 iniciais normalmente
     else {
         const respostaLista = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=151`);
         if (!respostaLista.ok) throw new Error('Falha ao buscar a PokeAPI');
@@ -63,7 +61,7 @@ export const buscarPokemonsIniciais = async (page: number = 1, search: string = 
     return { dados: dadosTratados, lastPage: lastPage };
 };
 
-// Adicione esta função ao seu arquivo de services
+
 export const buscarPokemonPorId = async (id: string) => {
     // 1. Dados Básicos (Stats, Peso, Altura, Tipos)
     const resBase = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
