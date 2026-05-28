@@ -1,17 +1,63 @@
 {
-  "success": true,
-  "data": [
-    {
-      "id": 1,
-      "name": "bulbasaur",
-      "types": ["grass", "poison"],
-      "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-    },
-    {
-      "id": 4,
-      "name": "charmander",
-      "types": ["fire"],
-      "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
+    "success": true,
+    "data": {
+        "id": 4,
+        "name": "charmander",
+        "description": "Obviously prefers\nhot places. When\nit rains, steam is said to spout\nfrom the tip of\nits tail.",
+        "height": 0.6,
+        "weight": 8.5,
+        "gender": "Masc / Fem",
+        "types": [
+            "fire"
+        ],
+        "weaknesses": [
+            "ground",
+            "rock",
+            "water"
+        ],
+        "stats": [
+            {
+                "name": "hp",
+                "value": 39
+            },
+            {
+                "name": "attack",
+                "value": 52
+            },
+            {
+                "name": "defense",
+                "value": 43
+            },
+            {
+                "name": "special-attack",
+                "value": 60
+            },
+            {
+                "name": "special-defense",
+                "value": 50
+            },
+            {
+                "name": "speed",
+                "value": 65
+            }
+        ],
+        "evolutions": [
+            {
+                "id": "4",
+                "name": "charmander",
+                "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
+            },
+            {
+                "id": "5",
+                "name": "charmeleon",
+                "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png"
+            },
+            {
+                "id": "6",
+                "name": "charizard",
+                "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png"
+            }
+        ],
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
     }
-  ]
 }
