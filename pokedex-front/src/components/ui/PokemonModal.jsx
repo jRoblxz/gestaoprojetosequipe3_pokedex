@@ -27,6 +27,7 @@ import imgSombrio from "../../assets/Insignias/sombrio.png";
 import imgTerra from "../../assets/Insignias/terra.png";
 import imgVeneno from "../../assets/Insignias/veneno.png";
 import imgVoador from "../../assets/Insignias/voador.png";
+import Loader from "./Loader";
 
 const typeImages = {
   bug: imgInseto,
@@ -91,7 +92,7 @@ export const PokemonModal = ({ pokemonId, onClose }) => {
         {/* Botão Fechar */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 bg-slate-900/50 hover:bg-red-500 text-white rounded-full p-2.5 transition-all z-10 backdrop-blur-md"
+          className="absolute top-6 cursor-pointer right-6 bg-slate-900/50 hover:bg-red-500 text-white rounded-full p-2.5 transition-all z-10 backdrop-blur-md"
         >
           <svg
             className="w-6 h-6"
@@ -110,7 +111,7 @@ export const PokemonModal = ({ pokemonId, onClose }) => {
 
         {loading ? (
           <div className="p-32 text-center text-slate-400 font-bold animate-pulse text-xl">
-            Sincronizando com a Pokédex...
+            <Loader />
           </div>
         ) : data ? (
           <div className="p-6 md:p-10">

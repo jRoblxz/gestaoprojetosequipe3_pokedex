@@ -107,9 +107,23 @@ export const buscarPokemonPorId = async (id: string) => {
   // 2. Descrição e Gênero (Species)
   const resSpecies = await fetch(base.species.url);
   const species = await resSpecies.json();
-  const descricao = species.flavor_text_entries
-    .find((e: any) => e.language.name === "pt" || e.language.name === "en")
-    ?.flavor_text.replace(/\f/g, " ");
+
+  // Tenta encontrar a descrição em PT-BR primeiro
+  let entradaDescricao = species.flavor_text_entries.find(
+    (e: any) => e.language.name === "pt-BR",
+  );
+
+  // Se não encontrar em PT-BR, pega em Inglês como fallback
+  if (!entradaDescricao) {
+    entradaDescricao = species.flavor_text_entries.find(
+      (e: any) => e.language.name === "en",
+    );
+  }
+
+  // Limpa caracteres especiais de quebra de linha (\f, \n, \r)
+  const descricao = entradaDescricao
+    ? entradaDescricao.flavor_text.replace(/\f|\n|\r/g, " ")
+    : "Descrição não disponível.";
 
   // Lógica de Gênero (baseada no gender_rate da API)
   const genderRate = species.gender_rate;
@@ -164,4 +178,4 @@ export const buscarPokemonPorId = async (id: string) => {
     evolutions: evolucoes,
     image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${base.id}.png`,
   };
-};
+};;
