@@ -268,7 +268,7 @@ export const PokemonModal = ({ pokemonId, onClose }) => {
                 <div className="flex items-center justify-center gap-4 md:gap-8 flex-wrap">
                   {data.evolutions.map((evo, index) => (
                     <React.Fragment key={evo.id}>
-                      <div className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-2">
+                      <div className="flex flex-col items-center group transition-transform hover:-translate-y-2">
                         <div
                           className={`w-20 h-20 md:w-28 md:h-28 bg-slate-800 rounded-full p-3 border-4 shadow-xl relative
                             ${evo.name === data.name ? "border-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.4)]" : "border-slate-600"}`}
